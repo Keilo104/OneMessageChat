@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/editMessageMi"
+        android:title="@string/menu_item_edit_message"/>
+    <item
+        android:id="@+id/unsubscribeMessageMi"
+        android:title="@string/menu_item_unsubscribe_message"/>
+</menu>

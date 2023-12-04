@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/createMessageMi"
+        android:title="@string/menu_item_create_message"/>
+    <item
+        android:id="@+id/subscribeMessageMi"
+        android:title="@string/menu_item_subscribe_message"/>
+</menu>
