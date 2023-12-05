@@ -59,7 +59,7 @@ class OneMessageController(private val mainActivity: MainActivity) {
 
     fun unsubscribeToMessage(identifier: String) {
         Thread {
-            oneMessageDaoImpl.unsubscribeToMessage(identifier)
+            oneMessageDaoImpl.unsubscribeFromMessage(identifier)
         }.start()
     }
 

@@ -1,6 +1,5 @@
 package br.edu.scl.ifsp.ads.onemessagechat.dao
 
-import android.util.Log
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -49,7 +48,7 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
                 val oneMessage: OneMessage? = snapshot.getValue<OneMessage>()
 
                 oneMessage?.also { _oneMessage ->
-                    oneMessageList.remove(_oneMessage)
+                    unsubscribeFromMessage(_oneMessage.identifier)
                 }
             }
 
@@ -125,12 +124,22 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
     }
 
     override fun subscribeToMessage(identifier: String): Int {
-        subscribedList.add(identifier)
-        subscriptionFirebaseReference.child(userUid).child(identifier).setValue(true)
+
+        oneMessageFirebaseReference.child(identifier).get().addOnSuccessListener {
+            val oneMessage = it.getValue<OneMessage>()
+            if (oneMessage !== null &&
+                !oneMessageList.any { it.identifier.equals(oneMessage.identifier) }) {
+                oneMessageList.add(oneMessage)
+
+                subscribedList.add(identifier)
+                subscriptionFirebaseReference.child(userUid).child(identifier).setValue(true)
+            }
+        }
+
         return 1
     }
 
-    override fun unsubscribeToMessage(identifier: String): Int {
+    override fun unsubscribeFromMessage(identifier: String): Int {
         subscribedList.remove(identifier)
         oneMessageList.removeIf { it.identifier.equals(identifier) }
         subscriptionFirebaseReference.child(userUid).child(identifier).removeValue()

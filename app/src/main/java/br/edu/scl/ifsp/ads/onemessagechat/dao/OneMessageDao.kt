@@ -15,5 +15,5 @@ interface OneMessageDao {
 
     fun subscribeToMessage(identifier: String): Int
 
-    fun unsubscribeToMessage(identifier: String): Int
+    fun unsubscribeFromMessage(identifier: String): Int
 }

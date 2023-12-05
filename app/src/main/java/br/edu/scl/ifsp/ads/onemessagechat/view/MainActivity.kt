@@ -1,8 +1,8 @@
 package br.edu.scl.ifsp.ads.onemessagechat.view
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,9 +12,12 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.EditText
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import br.edu.scl.ifsp.ads.onemessagechat.R
 import br.edu.scl.ifsp.ads.onemessagechat.adapter.OneMessageAdapter
 import br.edu.scl.ifsp.ads.onemessagechat.controller.OneMessageController
@@ -22,6 +25,7 @@ import br.edu.scl.ifsp.ads.onemessagechat.databinding.ActivityMainBinding
 import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.EXTRA_ONEMESSAGE
 import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.ONEMESSAGE_ARRAY
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
+
 
 class MainActivity : AppCompatActivity() {
     private val amb: ActivityMainBinding by lazy {
@@ -130,6 +134,32 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.subscribeMessageMi -> {
+                val alert: android.app.AlertDialog.Builder = android.app.AlertDialog.Builder(this)
+
+                alert.setTitle(R.string.main_activity_alert_title)
+                alert.setMessage(R.string.main_activity_alert_message)
+                val input = EditText(this)
+                alert.setView(input)
+
+                alert.setPositiveButton(
+                    R.string.main_activity_alert_positive
+                ) { _, _ ->
+                    val value: String = input.text.toString()
+                    oneMessageController.subscribeToMessage(value)
+                }
+
+                alert.setNegativeButton(
+                    R.string.main_activity_alert_negative
+                ) { _, _ ->
+                    Toast.makeText(
+                        this,
+                        R.string.main_activity_alert_negative_toast,
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+
+                alert.show()
+
                 true
             }
 
