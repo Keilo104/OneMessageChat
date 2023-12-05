@@ -29,22 +29,24 @@
 
     <ScrollView
         android:id="@+id/messageContentSv"
-        android:layout_height="wrap_content"
         android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         app:layout_constrainedHeight="true"
+        app:layout_constraintBottom_toTopOf="@id/saveBt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/messageIdentifierEt"
-        app:layout_constraintBottom_toTopOf="@id/saveBt">
+        app:layout_constraintVertical_bias="0">
+
         <EditText
             android:id="@+id/messageContentEt"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minLines="4"
             android:ems="10"
-            android:inputType="textMultiLine"
+            android:gravity="top"
             android:hint="@string/message_activity_message_content_hint"
-            />
+            android:inputType="textMultiLine"
+            android:minLines="4" />
     </ScrollView>
 
     <Button
