@@ -26,17 +26,4 @@
         app:layout_constraintBottom_toBottomOf="parent"
         />
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/addMessageFab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/primary_variant_theme_color"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:srcCompat="@drawable/ic_add"
-        app:tint="@color/black"
-        android:contentDescription="@string/main_activity_fab_description" />
-
 </androidx.constraintlayout.widget.ConstraintLayout>

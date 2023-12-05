@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">One Message Chat</string>
 
     <!-- Activity Main strings -->
-    <string name="main_activity_fab_description">Add new message</string>
     <string name="main_activity_menu_item_add_message">Add new message</string>
     <string name="main_activity_toolbar_title" translatable="false">One Message Chat</string>
     <string name="menu_item_create_message">Create a new message</string>
