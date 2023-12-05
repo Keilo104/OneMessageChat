@@ -3,12 +3,15 @@ package br.edu.scl.ifsp.ads.onemessagechat.view
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
-import android.widget.ArrayAdapter
+import android.view.View
+import android.widget.AdapterView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import br.edu.scl.ifsp.ads.onemessagechat.R
+import br.edu.scl.ifsp.ads.onemessagechat.adapter.OneMessageAdapter
 import br.edu.scl.ifsp.ads.onemessagechat.databinding.ActivityMainBinding
 import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.EXTRA_ONEMESSAGE
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
@@ -20,13 +23,10 @@ class MainActivity : AppCompatActivity() {
 
     private val oneMessageList: MutableList<OneMessage> = mutableListOf()
 
-    private val messageAdapter: ArrayAdapter<String> by lazy {
-        ArrayAdapter(
+    private val messageAdapter: OneMessageAdapter by lazy {
+        OneMessageAdapter(
             this,
-            android.R.layout.simple_list_item_1,
-            oneMessageList.map { _message ->
-                _message.content
-            }
+            oneMessageList,
         )
     }
 
@@ -41,10 +41,6 @@ class MainActivity : AppCompatActivity() {
 
         amb.messageLv.adapter = messageAdapter
 
-        amb.addMessageFab.setOnClickListener() {
-            launchMessageActivity()
-        }
-
         carl = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
@@ -52,12 +48,12 @@ class MainActivity : AppCompatActivity() {
                 val participant = result.data?.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
                 participant?.let { _message ->
                     oneMessageList.add(_message)
-                    messageAdapter.add(_message.content)
                     messageAdapter.notifyDataSetChanged()
                 }
             }
         }
 
+        registerForContextMenu(amb.messageLv)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -67,12 +63,44 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
-            R.id.addMessageMi -> {
+            R.id.createMessageMi -> {
                 launchMessageActivity()
+                true
+            }
+
+            R.id.subscribeMessageMi -> {
+                true
+            }
+
+            else -> false
+        }
+    }
+
+    override fun onCreateContextMenu(
+        menu: ContextMenu?,
+        v: View?,
+        menuInfo: ContextMenu.ContextMenuInfo?
+    ) {
+        menuInflater.inflate(R.menu.context_tile_menu_main, menu)
+    }
+
+    override fun onContextItemSelected(item: MenuItem): Boolean {
+        val position = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+        return when (item.itemId) {
+            R.id.editMessageMi -> {
+                true
+            }
+
+            R.id.unsubscribeMessageMi -> {
                 true
             }
             else -> false
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        unregisterForContextMenu(amb.messageLv)
     }
 
     private fun launchMessageActivity() {

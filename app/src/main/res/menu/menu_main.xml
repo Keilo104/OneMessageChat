@@ -6,6 +6,14 @@
         android:id="@+id/addMessageMi"
         android:icon="@drawable/ic_add"
         android:title="@string/main_activity_menu_item_add_message"
-        app:showAsAction="ifRoom" />
-
+        app:showAsAction="ifRoom">
+        <menu>
+            <item
+                android:id="@+id/createMessageMi"
+                android:title="@string/menu_item_create_message"/>
+            <item
+                android:id="@+id/subscribeMessageMi"
+                android:title="@string/menu_item_subscribe_message"/>
+        </menu>
+    </item>
 </menu>
