@@ -1,5 +1,6 @@
 package br.edu.scl.ifsp.ads.onemessagechat.dao
 
+import android.util.Log
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -123,16 +124,21 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
         return 1
     }
 
-    override fun subscribeToMessage(identifier: String): Int {
+    override fun softSubscribeToMessage(identifier: String): Int {
+        subscribedList.add(identifier)
+        subscriptionFirebaseReference.child(userUid).child(identifier).setValue(true)
 
+        return 1
+    }
+
+    override fun hardSubscribeToMessage(identifier: String): Int {
         oneMessageFirebaseReference.child(identifier).get().addOnSuccessListener {
             val oneMessage = it.getValue<OneMessage>()
             if (oneMessage !== null &&
                 !oneMessageList.any { it.identifier.equals(oneMessage.identifier) }) {
                 oneMessageList.add(oneMessage)
 
-                subscribedList.add(identifier)
-                subscriptionFirebaseReference.child(userUid).child(identifier).setValue(true)
+                softSubscribeToMessage(identifier)
             }
         }
 

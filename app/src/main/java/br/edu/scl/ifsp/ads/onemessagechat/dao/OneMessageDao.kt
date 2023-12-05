@@ -13,7 +13,9 @@ interface OneMessageDao {
 
     fun deleteOneMessage(oneMessage: OneMessage): Int
 
-    fun subscribeToMessage(identifier: String): Int
+    fun softSubscribeToMessage(identifier: String): Int
+
+    fun hardSubscribeToMessage(identifier: String): Int
 
     fun unsubscribeFromMessage(identifier: String): Int
 }

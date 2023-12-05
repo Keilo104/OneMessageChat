@@ -20,7 +20,7 @@ class OneMessageController(private val mainActivity: MainActivity) {
 
     fun insertOneMessage(oneMessage: OneMessage) {
         Thread {
-            oneMessageDaoImpl.subscribeToMessage(oneMessage.identifier)
+            oneMessageDaoImpl.softSubscribeToMessage(oneMessage.identifier)
             oneMessageDaoImpl.createOneMessage(oneMessage)
         }.start()
     }
@@ -52,7 +52,7 @@ class OneMessageController(private val mainActivity: MainActivity) {
 
     fun subscribeToMessage(identifier: String) {
         Thread {
-            oneMessageDaoImpl.subscribeToMessage(identifier)
+            oneMessageDaoImpl.hardSubscribeToMessage(identifier)
         }.start()
     }
 
