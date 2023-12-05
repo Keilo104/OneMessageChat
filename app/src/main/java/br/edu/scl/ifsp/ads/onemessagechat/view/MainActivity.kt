@@ -1,6 +1,7 @@
 package br.edu.scl.ifsp.ads.onemessagechat.view
 
 import android.content.Intent
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.ContextMenu
@@ -46,7 +47,12 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                val oneMessage = result.data?.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
+                val oneMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra("DATA", OneMessage::class.java)
+                } else {
+                    intent.getParcelableExtra<OneMessage>("DATA")
+                }
+
                 oneMessage?.let { _oneMessage ->
                     if(oneMessageList.any { it.identifier.equals(_oneMessage.identifier) }) {
                         val position = oneMessageList.indexOfFirst {

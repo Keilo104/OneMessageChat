@@ -1,6 +1,7 @@
 package br.edu.scl.ifsp.ads.onemessagechat.view
 
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import br.edu.scl.ifsp.ads.onemessagechat.R
@@ -21,7 +22,12 @@ class MessageActivity : AppCompatActivity() {
         supportActionBar?.title = resources.getString(R.string.message_activity_toolbar_title_create)
         supportActionBar?.subtitle = resources.getString(R.string.message_activity_toolbar_subtitle)
 
-        val receivedOneMessage = intent.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
+        val receivedOneMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            intent.getParcelableExtra("DATA", OneMessage::class.java)
+        } else {
+            intent.getParcelableExtra<OneMessage>("DATA")
+        }
+
         receivedOneMessage?.let { _receivedOneMessage ->
             with(amb) {
                 supportActionBar?.title = resources.getString(R.string.message_activity_toolbar_title_edit)
