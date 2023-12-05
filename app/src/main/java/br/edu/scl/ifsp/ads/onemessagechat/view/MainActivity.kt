@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.os.Message
+import android.util.Log
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
@@ -63,11 +64,13 @@ class MainActivity : AppCompatActivity() {
                 )
             } else {
                 msg.data.getParcelableArray(ONEMESSAGE_ARRAY)?.also { oneMessageArray ->
-                    oneMessageList.clear()
-                    oneMessageArray.forEach {
-                        oneMessageList.add(it as OneMessage)
+                    if (oneMessageArray.isNotEmpty()) {
+                        oneMessageList.clear()
+                        oneMessageArray.forEach {
+                            oneMessageList.add(it as OneMessage)
+                        }
+                        messageAdapter.notifyDataSetChanged()
                     }
-                    messageAdapter.notifyDataSetChanged()
                 }
             }
         }
@@ -83,8 +86,6 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = resources.getString(R.string.main_activity_toolbar_title)
 
         amb.messageLv.adapter = messageAdapter
-
-        oneMessageList.addAll(oneMessageController.loadFromLocalDb())
 
         carl = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -115,6 +116,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         registerForContextMenu(amb.messageLv)
+
+        oneMessageList.addAll(oneMessageController.loadFromLocalDb())
+        messageAdapter.notifyDataSetChanged()
 
         updateOneMessageListHandler.apply {
             sendMessage(
