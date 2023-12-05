@@ -11,7 +11,11 @@ import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.ONEMESSAGE_ARRAY
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import br.edu.scl.ifsp.ads.onemessagechat.view.MainActivity
 
-class OneMessageController(private val mainActivity: MainActivity) {
+class OneMessageController(
+    private val mainActivity: MainActivity,
+    private val oneMessageList: MutableList<OneMessage>
+) {
+
     private val userUid: String by lazy {
         Secure.getString(mainActivity.contentResolver, ANDROID_ID)
     }
@@ -29,6 +33,17 @@ class OneMessageController(private val mainActivity: MainActivity) {
             oneMessageDaoImpl.softSubscribeToMessage(oneMessage.identifier)
             oneMessageDaoImpl.createOneMessage(oneMessage)
         }.start()
+    }
+
+    fun loadFromLocalDb(): MutableList<OneMessage> {
+        return oneMessageLocalDaoImpl.retrieveOneMessages()
+    }
+
+    fun saveToLocalDb() {
+        oneMessageLocalDaoImpl.truncateOneMessageTable()
+        oneMessageList.forEach {
+            oneMessageLocalDaoImpl.createOneMessage(it)
+        }
     }
 
     fun getOneMessage(identifier: String): OneMessage? {
@@ -74,4 +89,5 @@ class OneMessageController(private val mainActivity: MainActivity) {
             oneMessageDaoImpl.deleteOneMessage(oneMessage)
         }.start()
     }
+
 }

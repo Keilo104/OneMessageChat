@@ -12,4 +12,6 @@ interface OneMessageLocalDao {
     fun updateOneMessage(oneMessage: OneMessage): Int
 
     fun deleteOneMessage(oneMessage: OneMessage): Int
+
+    fun truncateOneMessageTable()
 }

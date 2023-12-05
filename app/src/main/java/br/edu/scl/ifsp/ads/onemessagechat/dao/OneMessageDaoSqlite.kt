@@ -10,7 +10,7 @@ import br.edu.scl.ifsp.ads.onemessagechat.R
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import java.sql.SQLException
 
-class OneMessageDaoSqlite(context: Context) : OneMessageLocalDao {
+class OneMessageDaoSqlite(private val context: Context) : OneMessageLocalDao {
 
     companion object Constant {
         private const val ONEMESSAGE_DATABASE_FILE = "onemessage_localdb"
@@ -22,14 +22,14 @@ class OneMessageDaoSqlite(context: Context) : OneMessageLocalDao {
                     "$IDENTIFIER_COLUMN TEXT PRIMARY KEY," +
                     "$CONTENT_COLUMN TEXT NOT NULL" +
                     ");"
+        private const val TRUNCATE_ONEMESSAGE_TABLE_STATEMENT =
+            "DELETE FROM $ONEMESSAGE_TABLE"
     }
 
-    private val oneMessageSqliteDatabase: SQLiteDatabase
+    private val oneMessageSqliteDatabase: SQLiteDatabase =
+        context.openOrCreateDatabase(ONEMESSAGE_DATABASE_FILE, MODE_PRIVATE, null)
 
     init {
-        oneMessageSqliteDatabase =
-            context.openOrCreateDatabase(ONEMESSAGE_DATABASE_FILE, MODE_PRIVATE, null)
-
         try {
             oneMessageSqliteDatabase.execSQL(CREATE_ONEMESSAGE_TABLE_STATEMENT)
 
@@ -85,6 +85,15 @@ class OneMessageDaoSqlite(context: Context) : OneMessageLocalDao {
         "$IDENTIFIER_COLUMN = ?",
         arrayOf(oneMessage.identifier)
     )
+
+    override fun truncateOneMessageTable() {
+        try {
+            oneMessageSqliteDatabase.execSQL(TRUNCATE_ONEMESSAGE_TABLE_STATEMENT)
+
+        } catch (se: SQLException) {
+            Log.e(context.getString(R.string.app_name), se.message.toString())
+        }
+    }
 
     private fun Cursor.rowToOneMessage(): OneMessage = OneMessage(
         getString(getColumnIndexOrThrow(IDENTIFIER_COLUMN)),

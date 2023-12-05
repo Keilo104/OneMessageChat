@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
     private val oneMessageList: MutableList<OneMessage> = mutableListOf()
 
     private val oneMessageController: OneMessageController by lazy {
-        OneMessageController(this)
+        OneMessageController(this, oneMessageList)
     }
 
     private val messageAdapter: OneMessageAdapter by lazy {
@@ -83,6 +83,8 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.title = resources.getString(R.string.main_activity_toolbar_title)
 
         amb.messageLv.adapter = messageAdapter
+
+        oneMessageList.addAll(oneMessageController.loadFromLocalDb())
 
         carl = registerForActivityResult(
             ActivityResultContracts.StartActivityForResult()
@@ -216,6 +218,7 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterForContextMenu(amb.messageLv)
+        oneMessageController.saveToLocalDb()
     }
 
     private fun launchCreateMessageActivity() {
