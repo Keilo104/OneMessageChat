@@ -156,16 +156,29 @@ class MainActivity : AppCompatActivity() {
             }
 
             R.id.unsubscribeMessageMi -> {
-                oneMessageController.removeOneMessage(oneMessage)
+                oneMessageController.unsubscribeToMessage(oneMessage.identifier)
 
                 Toast.makeText(
                     this,
                     resources.getString(R.string.main_activity_toast_unsubscribe),
                     Toast.LENGTH_SHORT,
                 ).show()
-                
+
                 true
             }
+
+            R.id.deleteMessageMi -> {
+                oneMessageController.removeOneMessage(oneMessage)
+
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.main_activity_toast_delete),
+                    Toast.LENGTH_SHORT,
+                ).show()
+
+                true
+            }
+
             else -> false
         }
     }

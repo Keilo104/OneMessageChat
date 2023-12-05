@@ -2,7 +2,7 @@ package br.edu.scl.ifsp.ads.onemessagechat.dao
 
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 
-interface OneMessageDao {
+interface OneMessageLocalDao {
     fun createOneMessage(oneMessage: OneMessage)
 
     fun retrieveOneMessage(identifier: String): OneMessage?
@@ -12,8 +12,4 @@ interface OneMessageDao {
     fun updateOneMessage(oneMessage: OneMessage): Int
 
     fun deleteOneMessage(oneMessage: OneMessage): Int
-
-    fun subscribeToMessage(identifier: String): Int
-
-    fun unsubscribeToMessage(identifier: String): Int
 }

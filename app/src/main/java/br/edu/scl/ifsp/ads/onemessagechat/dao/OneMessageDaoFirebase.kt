@@ -9,14 +9,16 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
-class OneMessageDaoFirebase : OneMessageDao {
+class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
 
     companion object {
         private const val ONEMESSAGE_LIST_ROOT_NODE = "oneMessageList"
+        private const val SUBSCRIPTION_LIST_ROOT_NODE = "subscriptionList"
     }
 
     private val oneMessageFirebaseReference = Firebase.database.getReference(ONEMESSAGE_LIST_ROOT_NODE)
-
+    private val subscriptionFirebaseReference = Firebase.database.getReference(SUBSCRIPTION_LIST_ROOT_NODE)
+    private val subscribedList: MutableList<String> = mutableListOf()
     private val oneMessageList: MutableList<OneMessage> = mutableListOf()
 
     init {
@@ -25,7 +27,8 @@ class OneMessageDaoFirebase : OneMessageDao {
                 val oneMessage: OneMessage? = snapshot.getValue<OneMessage>()
 
                 oneMessage?.also { _oneMessage ->
-                    if (!oneMessageList.any { it.identifier.equals(_oneMessage.identifier) }) {
+                    if (_oneMessage.identifier in subscribedList &&
+                        !oneMessageList.any { it.identifier.equals(_oneMessage.identifier) }) {
                         oneMessageList.add(_oneMessage)
                     }
                 }
@@ -64,14 +67,33 @@ class OneMessageDaoFirebase : OneMessageDao {
 
                 oneMessageList.clear()
 
-                oneMessageMap?.values?.also {
-                    oneMessageList.addAll(it)
+                oneMessageMap?.values?.onEach {
+                    if (it.identifier in subscribedList) {
+                        oneMessageList.add(it)
+                    }
                 }
             }
 
             override fun onCancelled(error: DatabaseError) {
                 // NSA
             }
+        })
+
+        subscriptionFirebaseReference.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val subscriptionMap = snapshot.getValue<Map<String, Map<String, Boolean>>>()
+
+                subscribedList.clear()
+
+                subscriptionMap?.get(userUid)?.let {
+                    subscribedList.addAll(it.keys)
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // NSA
+            }
+
         })
     }
 
@@ -98,6 +120,18 @@ class OneMessageDaoFirebase : OneMessageDao {
 
     override fun deleteOneMessage(oneMessage: OneMessage): Int {
         oneMessageFirebaseReference.child(oneMessage.identifier).removeValue()
+        return 1
+    }
+
+    override fun subscribeToMessage(identifier: String): Int {
+        subscribedList.add(identifier)
+        subscriptionFirebaseReference.child(userUid).child(identifier).setValue(true)
+        return 1
+    }
+
+    override fun unsubscribeToMessage(identifier: String): Int {
+        subscribedList.remove(identifier)
+        subscriptionFirebaseReference.child(userUid).child(identifier).removeValue()
         return 1
     }
 }
