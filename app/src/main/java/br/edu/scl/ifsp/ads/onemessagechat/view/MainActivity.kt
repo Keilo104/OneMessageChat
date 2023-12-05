@@ -48,6 +48,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val GET_ONEMESSAGE_MSG = 1
+        const val ONEMESSAGE_FORCE_UPDATE = 2
         const val GET_ONEMESSAGE_INTERVAL = 2000L
     }
 
@@ -62,6 +63,16 @@ class MainActivity : AppCompatActivity() {
                     obtainMessage().apply { what = GET_ONEMESSAGE_MSG },
                     GET_ONEMESSAGE_INTERVAL
                 )
+            } else if (msg.what == ONEMESSAGE_FORCE_UPDATE) {
+                msg.data.getParcelableArray(ONEMESSAGE_ARRAY)?.also { oneMessageArray ->
+                    oneMessageList.clear()
+                    oneMessageArray.forEach {
+                        oneMessageList.add(it as OneMessage)
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                    oneMessageController.saveToLocalDb()
+                }
+
             } else {
                 msg.data.getParcelableArray(ONEMESSAGE_ARRAY)?.also { oneMessageArray ->
                     if (oneMessageArray.isNotEmpty()) {
@@ -222,6 +233,16 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         unregisterForContextMenu(amb.messageLv)
+        oneMessageController.saveToLocalDb()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        oneMessageController.saveToLocalDb()
+    }
+
+    override fun onStop() {
+        super.onStop()
         oneMessageController.saveToLocalDb()
     }
 

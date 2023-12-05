@@ -21,7 +21,7 @@ class OneMessageController(
     }
 
     private val oneMessageDaoImpl: OneMessageDao by lazy {
-        OneMessageDaoFirebase(userUid)
+        OneMessageDaoFirebase(mainActivity, userUid)
     }
 
     private val oneMessageLocalDaoImpl: OneMessageLocalDao by lazy {

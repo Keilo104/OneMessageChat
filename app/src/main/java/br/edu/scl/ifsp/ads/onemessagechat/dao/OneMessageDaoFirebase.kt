@@ -1,7 +1,10 @@
 package br.edu.scl.ifsp.ads.onemessagechat.dao
 
+import android.os.Message
 import android.util.Log
+import br.edu.scl.ifsp.ads.onemessagechat.model.Constant
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
+import br.edu.scl.ifsp.ads.onemessagechat.view.MainActivity
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -10,7 +13,10 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.database.database
 import com.google.firebase.database.getValue
 
-class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
+class OneMessageDaoFirebase(
+    private val mainActivity: MainActivity,
+    private val userUid: String
+) : OneMessageDao {
 
     companion object {
         private const val ONEMESSAGE_LIST_ROOT_NODE = "oneMessageList"
@@ -33,6 +39,8 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
                         oneMessageList.add(_oneMessage)
                     }
                 }
+
+                orderOneMessageList()
             }
 
             override fun onChildChanged(snapshot: DataSnapshot, previousChildName: String?) {
@@ -73,6 +81,7 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
                         oneMessageList.add(it)
                     }
                 }
+                orderOneMessageList()
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -140,6 +149,7 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
 
                 softSubscribeToMessage(identifier)
             }
+            orderOneMessageList()
         }
 
         return 1
@@ -148,7 +158,22 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
     override fun unsubscribeFromMessage(identifier: String): Int {
         subscribedList.remove(identifier)
         oneMessageList.removeIf { it.identifier.equals(identifier) }
+
         subscriptionFirebaseReference.child(userUid).child(identifier).removeValue()
+
+        val message = Message()
+        message.data.putParcelableArray(
+            Constant.ONEMESSAGE_ARRAY,
+            oneMessageList.toTypedArray()
+        )
+
+        message.what = MainActivity.ONEMESSAGE_FORCE_UPDATE
+        mainActivity.updateOneMessageListHandler.sendMessage(message)
+
         return 1
+    }
+
+    private fun orderOneMessageList() {
+        oneMessageList.sortBy { it.identifier }
     }
 }
