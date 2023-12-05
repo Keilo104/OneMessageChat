@@ -2,7 +2,6 @@
     <string name="app_name" translatable="false">One Message Chat</string>
 
     <!-- Activity Main strings -->
-    <string name="main_activity_menu_item_add_message">Add new message</string>
     <string name="main_activity_toolbar_title" translatable="false">One Message Chat</string>
     <string name="menu_item_create_message">Create a new message</string>
     <string name="menu_item_subscribe_message">Subscribe to a message</string>
@@ -30,4 +29,6 @@
     <string name="message_activity_save_button">Save!</string>
     <string name="message_activity_cancel_button">Cancel</string>
     <string name="menu_item_delete_message">Delete this message</string>
+    <string name="menu_item_quit_app">Quit One Message Chat</string>
+    <string name="main_activity_menu_item_description">Settings</string>
 </resources>

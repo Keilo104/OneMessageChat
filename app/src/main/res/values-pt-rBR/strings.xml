@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="main_activity_fab_description">Adicionar nova mensagem</string>
-    <string name="main_activity_menu_item_add_message">Adicionar nova mensagem</string>
     <string name="menu_item_create_message">Criar nova mensagem</string>
     <string name="menu_item_subscribe_message">Se inscrever a uma mensagem</string>
     <string name="menu_item_edit_message">Editar essa mensagem</string>
@@ -21,4 +19,6 @@
     <string name="main_activity_alert_negative">Cancelar</string>
     <string name="main_activity_alert_positive">Se inscrever!</string>
     <string name="main_activity_alert_negative_toast">Esquece!</string>
+    <string name="menu_item_quit_app">Sair do One Message Chat</string>
+    <string name="main_activity_menu_item_description">Configurações</string>
 </resources>

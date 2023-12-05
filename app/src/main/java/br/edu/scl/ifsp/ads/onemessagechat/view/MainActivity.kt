@@ -146,7 +146,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.createMessageMi -> {
-                launchCreateMessageActivity()
+                carl.launch(Intent(this, MessageActivity::class.java))
                 true
             }
 
@@ -176,6 +176,12 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 alert.show()
+
+                true
+            }
+
+            R.id.quitAppMi -> {
+                finishAndRemoveTask()
 
                 true
             }
@@ -244,10 +250,6 @@ class MainActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         oneMessageController.saveToLocalDb()
-    }
-
-    private fun launchCreateMessageActivity() {
-        carl.launch(Intent(this, MessageActivity::class.java))
     }
 
     private fun launchEditMessageActivity(oneMessage: OneMessage) {
