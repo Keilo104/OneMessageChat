@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="main_activity_fab_description">Adicionar nova mensagem</string>
+    <string name="main_activity_menu_item_add_message">Adicionar nova mensagem</string>
+    <string name="menu_item_create_message">Criar nova mensagem</string>
+    <string name="menu_item_subscribe_message">Se inscrever a uma mensagem</string>
+    <string name="menu_item_edit_message">Editar essa mensagem</string>
+    <string name="menu_item_unsubscribe_message">Se desinscrever dessa mensagem</string>
+    <string name="main_activity_toast_unsubscribe">Desinscrito dessa mensagem!</string>
+    <string name="main_activity_toast_delete">Mensagem deletada!</string>
+    <string name="message_activity_toolbar_title_edit">Editar essa mensagem</string>
+    <string name="message_activity_toolbar_subtitle">Detalhes da mensagem</string>
+    <string name="message_activity_toolbar_title_create">Criar uma nova mensagem!</string>
+    <string name="message_activity_message_identifier_hint">Identificador da mensagem</string>
+    <string name="message_activity_message_content_hint">Conteúdo da mensagem</string>
+    <string name="message_activity_save_button">Salvar!</string>
+    <string name="message_activity_cancel_button">Cancelar</string>
+    <string name="menu_item_delete_message">Deletar essa mensagem</string>
+    <string name="main_activity_alert_title">Se inscreva a uma nova mensagem!</string>
+    <string name="main_activity_alert_message">Escreva o identificador abaixo:</string>
+    <string name="main_activity_alert_negative">Cancelar</string>
+    <string name="main_activity_alert_positive">Se inscrever!</string>
+    <string name="main_activity_alert_negative_toast">Esquece!</string>
+</resources>
