@@ -1,8 +1,12 @@
 package br.edu.scl.ifsp.ads.onemessagechat.view
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import br.edu.scl.ifsp.ads.onemessagechat.R
 import br.edu.scl.ifsp.ads.onemessagechat.databinding.ActivityMessageBinding
+import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.EXTRA_ONEMESSAGE
+import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 
 class MessageActivity : AppCompatActivity() {
     private val amb : ActivityMessageBinding by lazy {
@@ -14,6 +18,20 @@ class MessageActivity : AppCompatActivity() {
         setContentView(amb.root)
 
         setSupportActionBar(amb.toolbarIn.toolbar)
-        supportActionBar?.title = "alo2"
+        supportActionBar?.title = resources.getString(R.string.message_activity_toolbar_title_create)
+
+        with(amb) {
+            saveBt.setOnClickListener {
+                val oneMessage = OneMessage(
+                    identifier = messageIdentifierEt.text.toString(),
+                    content = messageContentEt.text.toString(),
+                )
+
+                val resultIntent = Intent()
+                resultIntent.putExtra(EXTRA_ONEMESSAGE, oneMessage)
+                setResult(RESULT_OK, resultIntent)
+                finish()
+            }
+        }
     }
 }
