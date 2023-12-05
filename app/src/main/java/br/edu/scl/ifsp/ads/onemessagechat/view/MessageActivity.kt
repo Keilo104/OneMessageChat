@@ -19,6 +19,18 @@ class MessageActivity : AppCompatActivity() {
 
         setSupportActionBar(amb.toolbarIn.toolbar)
         supportActionBar?.title = resources.getString(R.string.message_activity_toolbar_title_create)
+        supportActionBar?.subtitle = resources.getString(R.string.message_activity_toolbar_subtitle)
+
+        val receivedOneMessage = intent.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
+        receivedOneMessage?.let { _receivedOneMessage ->
+            with(amb) {
+                supportActionBar?.title = resources.getString(R.string.message_activity_toolbar_title_edit)
+                messageIdentifierEt.setText(_receivedOneMessage.identifier)
+                messageContentEt.setText(_receivedOneMessage.content)
+
+                messageIdentifierEt.isEnabled = false
+            }
+        }
 
         with(amb) {
             saveBt.setOnClickListener {

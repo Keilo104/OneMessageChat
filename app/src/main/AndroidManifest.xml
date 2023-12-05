@@ -24,6 +24,7 @@
 
         <activity
             android:name=".view.MessageActivity"
+            android:windowSoftInputMode="adjustResize"
             android:exported="false" />
     </application>
 

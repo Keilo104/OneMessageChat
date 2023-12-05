@@ -9,14 +9,19 @@
     <string name="menu_item_subscribe_message">Subscribe to a new message</string>
     <string name="menu_item_edit_message">Edit this message</string>
     <string name="menu_item_unsubscribe_message">Unsubscribe from this message</string>
+    <string name="main_activity_toast_unsubscribe">Unsubscribed from message!</string>
 
     <!-- Tile Message strings -->
-    <string name="tile_message_message_identifier_placeholder">Placeholder message identifier</string>
     <string name="tile_message_message_content_placeholder">Placeholder message content</string>
+    <string name="tile_message_message_identifier_lead">"ID: "</string>
+    <string name="tile_message_message_identifier_placeholder">Placeholder message identifier</string>
 
     <!-- Activity Message strings -->
+    <string name="message_activity_toolbar_title_edit">Edit this message</string>
+    <string name="message_activity_toolbar_subtitle">Message details</string>
     <string name="message_activity_toolbar_title_create">Create a new message!</string>
     <string name="message_activity_message_identifier_hint">Message identifier</string>
     <string name="message_activity_message_content_hint">Message content</string>
     <string name="message_activity_save_button">Save!</string>
+    <string name="message_activity_cancel_button">Cancel</string>
 </resources>

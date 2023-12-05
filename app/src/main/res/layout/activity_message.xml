@@ -27,16 +27,25 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbarIn" />
 
-    <EditText
-        android:id="@+id/messageContentEt"
-        android:layout_width="0dp"
+    <ScrollView
+        android:id="@+id/messageContentSv"
         android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="text"
-        android:hint="@string/message_activity_message_content_hint"
+        android:layout_width="match_parent"
+        app:layout_constrainedHeight="true"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/messageIdentifierEt" />
+        app:layout_constraintTop_toBottomOf="@id/messageIdentifierEt"
+        app:layout_constraintBottom_toTopOf="@id/saveBt">
+        <EditText
+            android:id="@+id/messageContentEt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minLines="4"
+            android:ems="10"
+            android:inputType="textMultiLine"
+            android:hint="@string/message_activity_message_content_hint"
+            />
+    </ScrollView>
 
     <Button
         android:id="@+id/saveBt"
@@ -45,6 +54,17 @@
         android:text="@string/message_activity_save_button"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/messageContentEt" />
+        app:layout_constraintBottom_toTopOf="@id/cancelBt" />
+
+    <Button
+        android:id="@+id/cancelBt"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="@string/message_activity_cancel_button"
+        android:layout_marginVertical="15dp"
+        android:backgroundTint="@color/cancel_button_red"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

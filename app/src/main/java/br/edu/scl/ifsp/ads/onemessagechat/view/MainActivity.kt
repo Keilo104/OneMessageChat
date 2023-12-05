@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.AdapterView
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import br.edu.scl.ifsp.ads.onemessagechat.R
@@ -45,12 +46,27 @@ class MainActivity : AppCompatActivity() {
             ActivityResultContracts.StartActivityForResult()
         ) { result ->
             if (result.resultCode == RESULT_OK) {
-                val participant = result.data?.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
-                participant?.let { _message ->
-                    oneMessageList.add(_message)
+                val oneMessage = result.data?.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
+                oneMessage?.let { _oneMessage ->
+                    if(oneMessageList.any { it.identifier.equals(_oneMessage.identifier) }) {
+                        val position = oneMessageList.indexOfFirst {
+                            it.identifier.equals(_oneMessage.identifier)
+                        }
+
+                        oneMessageList[position] = _oneMessage
+
+                    } else {
+                        oneMessageList.add(_oneMessage)
+                    }
+
                     messageAdapter.notifyDataSetChanged()
                 }
             }
+        }
+
+        amb.messageLv.setOnItemClickListener { _, _, position, _ ->
+            val oneMessage = oneMessageList[position]
+            launchEditMessageActivity(oneMessage)
         }
 
         registerForContextMenu(amb.messageLv)
@@ -64,7 +80,7 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when(item.itemId) {
             R.id.createMessageMi -> {
-                launchMessageActivity()
+                launchCreateMessageActivity()
                 true
             }
 
@@ -88,10 +104,21 @@ class MainActivity : AppCompatActivity() {
         val position = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
         return when (item.itemId) {
             R.id.editMessageMi -> {
+                val oneMessage = oneMessageList[position]
+                launchEditMessageActivity(oneMessage)
                 true
             }
 
             R.id.unsubscribeMessageMi -> {
+                oneMessageList.removeAt(position)
+                messageAdapter.notifyDataSetChanged()
+
+                Toast.makeText(
+                    this,
+                    resources.getString(R.string.main_activity_toast_unsubscribe),
+                    Toast.LENGTH_SHORT,
+                ).show()
+                
                 true
             }
             else -> false
@@ -103,7 +130,13 @@ class MainActivity : AppCompatActivity() {
         unregisterForContextMenu(amb.messageLv)
     }
 
-    private fun launchMessageActivity() {
+    private fun launchCreateMessageActivity() {
         carl.launch(Intent(this, MessageActivity::class.java))
+    }
+
+    private fun launchEditMessageActivity(oneMessage: OneMessage) {
+        val editOneMessageIntent = Intent(this, MessageActivity::class.java)
+        editOneMessageIntent.putExtra(EXTRA_ONEMESSAGE, oneMessage)
+        carl.launch(editOneMessageIntent)
     }
 }
