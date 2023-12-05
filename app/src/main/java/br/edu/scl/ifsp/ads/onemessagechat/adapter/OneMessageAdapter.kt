@@ -18,11 +18,10 @@ class OneMessageAdapter(
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         val oneMessage = oneMessageList[position]
-        var tmb: TileMessageBinding? = null
 
         var messageTileView = convertView
         if (messageTileView == null) {
-            tmb = TileMessageBinding.inflate(
+            val tmb = TileMessageBinding.inflate(
                 context.getSystemService(LAYOUT_INFLATER_SERVICE) as LayoutInflater,
                 parent,
                 false

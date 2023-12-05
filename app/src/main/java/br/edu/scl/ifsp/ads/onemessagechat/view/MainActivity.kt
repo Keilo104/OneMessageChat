@@ -4,6 +4,9 @@ import android.content.Intent
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.os.Message
 import android.view.ContextMenu
 import android.view.Menu
 import android.view.MenuItem
@@ -14,8 +17,10 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import br.edu.scl.ifsp.ads.onemessagechat.R
 import br.edu.scl.ifsp.ads.onemessagechat.adapter.OneMessageAdapter
+import br.edu.scl.ifsp.ads.onemessagechat.controller.OneMessageController
 import br.edu.scl.ifsp.ads.onemessagechat.databinding.ActivityMainBinding
 import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.EXTRA_ONEMESSAGE
+import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.ONEMESSAGE_ARRAY
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 
 class MainActivity : AppCompatActivity() {
@@ -25,11 +30,43 @@ class MainActivity : AppCompatActivity() {
 
     private val oneMessageList: MutableList<OneMessage> = mutableListOf()
 
+    private val oneMessageController: OneMessageController by lazy {
+        OneMessageController(this)
+    }
+
     private val messageAdapter: OneMessageAdapter by lazy {
         OneMessageAdapter(
             this,
             oneMessageList,
         )
+    }
+
+    companion object {
+        const val GET_ONEMESSAGE_MSG = 1
+        const val GET_ONEMESSAGE_INTERVAL = 2000L
+    }
+
+    val updateOneMessageListHandler = object: Handler(Looper.getMainLooper()) {
+        override fun handleMessage(msg: Message) {
+            super.handleMessage(msg)
+
+            if (msg.what == GET_ONEMESSAGE_MSG) {
+                oneMessageController.getOneMessages()
+
+                sendMessageDelayed(
+                    obtainMessage().apply { what = GET_ONEMESSAGE_MSG },
+                    GET_ONEMESSAGE_INTERVAL
+                )
+            } else {
+                msg.data.getParcelableArray(ONEMESSAGE_ARRAY)?.also { oneMessageArray ->
+                    oneMessageList.clear()
+                    oneMessageArray.forEach {
+                        oneMessageList.add(it as OneMessage)
+                    }
+                    messageAdapter.notifyDataSetChanged()
+                }
+            }
+        }
     }
 
     private lateinit var carl: ActivityResultLauncher<Intent>
@@ -48,21 +85,17 @@ class MainActivity : AppCompatActivity() {
         ) { result ->
             if (result.resultCode == RESULT_OK) {
                 val oneMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                    intent.getParcelableExtra("DATA", OneMessage::class.java)
+                    result.data?.getParcelableExtra(EXTRA_ONEMESSAGE, OneMessage::class.java)
                 } else {
-                    intent.getParcelableExtra<OneMessage>("DATA")
+                    result.data?.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
                 }
 
                 oneMessage?.let { _oneMessage ->
                     if(oneMessageList.any { it.identifier.equals(_oneMessage.identifier) }) {
-                        val position = oneMessageList.indexOfFirst {
-                            it.identifier.equals(_oneMessage.identifier)
-                        }
-
-                        oneMessageList[position] = _oneMessage
+                        oneMessageController.editOneMessage(_oneMessage)
 
                     } else {
-                        oneMessageList.add(_oneMessage)
+                        oneMessageController.insertOneMessage(_oneMessage)
                     }
 
                     messageAdapter.notifyDataSetChanged()
@@ -76,6 +109,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         registerForContextMenu(amb.messageLv)
+
+        updateOneMessageListHandler.apply {
+            sendMessage(
+                obtainMessage().apply { what = GET_ONEMESSAGE_MSG }
+            )
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -108,16 +147,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onContextItemSelected(item: MenuItem): Boolean {
         val position = (item.menuInfo as AdapterView.AdapterContextMenuInfo).position
+        val oneMessage = oneMessageList[position]
+
         return when (item.itemId) {
             R.id.editMessageMi -> {
-                val oneMessage = oneMessageList[position]
                 launchEditMessageActivity(oneMessage)
                 true
             }
 
             R.id.unsubscribeMessageMi -> {
-                oneMessageList.removeAt(position)
-                messageAdapter.notifyDataSetChanged()
+                oneMessageController.removeOneMessage(oneMessage)
 
                 Toast.makeText(
                     this,

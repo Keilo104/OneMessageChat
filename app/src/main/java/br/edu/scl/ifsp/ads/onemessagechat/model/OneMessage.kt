@@ -5,8 +5,6 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class OneMessage(
-    var identifier: String,
-    var content: String,
-) : Parcelable {
-
-}
+    var identifier: String = "",
+    var content: String = "",
+) : Parcelable

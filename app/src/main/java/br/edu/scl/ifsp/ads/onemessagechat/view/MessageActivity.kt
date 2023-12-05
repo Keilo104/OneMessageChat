@@ -23,9 +23,9 @@ class MessageActivity : AppCompatActivity() {
         supportActionBar?.subtitle = resources.getString(R.string.message_activity_toolbar_subtitle)
 
         val receivedOneMessage = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            intent.getParcelableExtra("DATA", OneMessage::class.java)
+            intent.getParcelableExtra(EXTRA_ONEMESSAGE, OneMessage::class.java)
         } else {
-            intent.getParcelableExtra<OneMessage>("DATA")
+            intent.getParcelableExtra<OneMessage>(EXTRA_ONEMESSAGE)
         }
 
         receivedOneMessage?.let { _receivedOneMessage ->
