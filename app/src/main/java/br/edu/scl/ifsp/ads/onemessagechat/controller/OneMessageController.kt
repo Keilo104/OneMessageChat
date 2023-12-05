@@ -5,6 +5,8 @@ import android.provider.Settings.Secure
 import android.provider.Settings.Secure.ANDROID_ID
 import br.edu.scl.ifsp.ads.onemessagechat.dao.OneMessageDao
 import br.edu.scl.ifsp.ads.onemessagechat.dao.OneMessageDaoFirebase
+import br.edu.scl.ifsp.ads.onemessagechat.dao.OneMessageDaoSqlite
+import br.edu.scl.ifsp.ads.onemessagechat.dao.OneMessageLocalDao
 import br.edu.scl.ifsp.ads.onemessagechat.model.Constant.ONEMESSAGE_ARRAY
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import br.edu.scl.ifsp.ads.onemessagechat.view.MainActivity
@@ -16,6 +18,10 @@ class OneMessageController(private val mainActivity: MainActivity) {
 
     private val oneMessageDaoImpl: OneMessageDao by lazy {
         OneMessageDaoFirebase(userUid)
+    }
+
+    private val oneMessageLocalDaoImpl: OneMessageLocalDao by lazy {
+        OneMessageDaoSqlite(mainActivity)
     }
 
     fun insertOneMessage(oneMessage: OneMessage) {
