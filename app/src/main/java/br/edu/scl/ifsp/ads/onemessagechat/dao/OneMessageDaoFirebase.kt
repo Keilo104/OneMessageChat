@@ -1,5 +1,6 @@
 package br.edu.scl.ifsp.ads.onemessagechat.dao
 
+import android.util.Log
 import br.edu.scl.ifsp.ads.onemessagechat.model.OneMessage
 import com.google.firebase.Firebase
 import com.google.firebase.database.ChildEventListener
@@ -131,6 +132,7 @@ class OneMessageDaoFirebase(val userUid: String) : OneMessageDao {
 
     override fun unsubscribeToMessage(identifier: String): Int {
         subscribedList.remove(identifier)
+        oneMessageList.removeIf { it.identifier.equals(identifier) }
         subscriptionFirebaseReference.child(userUid).child(identifier).removeValue()
         return 1
     }
